@@ -198,7 +198,10 @@ input[name="note"]       { width: 150px; }
 <div style="margin-top: 20px;">
   <button onclick="addRow()" style="width: 180px;">➕ เพิ่มแถว</button>
 </div>
-
+<div style="display: flex; justify-content: flex-end; gap: 20px; margin-top: 10px; align-items: center;">
+  <strong>รวมค่าใช้จ่ายทั้งหมด:</strong>
+  <span id="totalExpense" style="font-weight: bold; color: #0d47a1;">0.00 บาท</span>
+</div>
 <div class="summary" style="display: flex; justify-content: flex-end; gap: 20px; margin-top: 15px; align-items: center;">
   <label style="display: flex; align-items: center; gap: 6px;">
     ADVANCE:
@@ -355,6 +358,8 @@ function updateSummary() {
   const netLabel = net < 0 ? "คืนเงิน" : "เบิกเพิ่ม";
 const netValue = formatNumber(Math.abs(net)); // แปลงเป็นค่าบวก
 document.getElementById("netTotal").textContent = `${netLabel}: ${netValue} บาท`;
+const totalExpense = travel + stay + daily + entertain + repair + other;
+  document.getElementById("totalExpense").textContent = formatNumber(totalExpense) + ' บาท';
 }
 
 function saveLocalNamed() {
@@ -452,15 +457,15 @@ function printTableOnly() {
   const sumRepair = document.getElementById("sumRepair").textContent;
   const sumOther = document.getElementById("sumOther").textContent;
 
-  const net = (
+  const totalExpense =
     parseCleanNumber(sumTravel) +
     parseCleanNumber(sumStay) +
     parseCleanNumber(sumDaily) +
     parseCleanNumber(sumEntertain) +
     parseCleanNumber(sumRepair) +
-    parseCleanNumber(sumOther)
-  ) - parseCleanNumber(advance);
+    parseCleanNumber(sumOther);
 
+  const net = totalExpense - parseCleanNumber(advance);
   const netLabel = net < 0 ? "คืนเงิน" : "เบิกเพิ่ม";
   const netValue = formatNumber(Math.abs(net));
 
@@ -523,6 +528,11 @@ function printTableOnly() {
       <td>${sumRepair}</td>
       <td>${sumOther}</td>
       <td></td>
+    </tr>
+    <tr>
+      <td colspan="12" style="text-align:right; font-weight:bold;">
+        รวมค่าใช้จ่ายทั้งหมด: ${formatNumber(totalExpense)} บาท
+      </td>
     </tr>
     <tr>
       <td colspan="12" style="text-align:right; font-weight:bold;">
